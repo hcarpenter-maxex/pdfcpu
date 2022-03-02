@@ -495,7 +495,10 @@ func validateCSArray(xRefTable *pdf.XRefTable, a pdf.Array, csName string) error
 		return validateDeviceNColorSpace(xRefTable, a, pdf.V13)
 
 	default:
-		return errors.Errorf("validateColorSpaceArray: undefined color space: %s\n", csName)
+		if ok := validateDeviceColorSpaceName(csName); !ok {
+			return errors.Errorf("validateColorSpaceArray: undefined color space: %s\n", csName)
+		}
+		return nil
 	}
 
 }
@@ -557,7 +560,9 @@ func validateColorSpaceArray(xRefTable *pdf.XRefTable, a pdf.Array, excludePatte
 		err = validateDeviceNColorSpace(xRefTable, a, pdf.V13)
 
 	default:
-		err = errors.Errorf("pdfcpu: validateColorSpaceArray: undefined color space: %s\n", name)
+		if ok := validateDeviceColorSpaceName(name.String()); !ok {
+			err = errors.Errorf("pdfcpu: validateColorSpaceArray: undefined color space: %s\n", name)
+		}
 	}
 
 	return err

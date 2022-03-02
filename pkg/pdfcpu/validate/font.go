@@ -921,7 +921,7 @@ func validateType3FontDict(xRefTable *pdf.XRefTable, d pdf.Dict) error {
 	if xRefTable.ValidationMode == pdf.ValidationRelaxed {
 		sinceVersion = pdf.V13
 	}
-	err = validateFontDescriptor(xRefTable, d, dictName, "Type3", xRefTable.Tagged, sinceVersion)
+	err = validateFontDescriptor(xRefTable, d, dictName, "Type3", xRefTable.Tagged && xRefTable.ValidationMode != pdf.ValidationRelaxed, sinceVersion)
 	if err != nil {
 		return err
 	}
