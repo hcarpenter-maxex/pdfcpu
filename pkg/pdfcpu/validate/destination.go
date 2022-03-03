@@ -81,14 +81,17 @@ func validateDestinationArray(xRefTable *pdf.XRefTable, a pdf.Array) error {
 	switch len(a) {
 
 	case 2:
+		// 12.3.2.2 Explicit Destinations
+		// "A null value for any of the parameters left, top, or zoom specifies that the current value of that parameter shall be retained unchanged."
+		// We may have fewer array elements if the left, top, or zoom properties are null. "XYZ" should therefore be allowed for fewer than four elements.
 		if xRefTable.ValidationMode == pdf.ValidationRelaxed {
-			nameErr = !pdf.MemberOf(name.Value(), []string{"Fit", "FitB", "FitH"})
+			nameErr = !pdf.MemberOf(name.Value(), []string{"Fit", "FitB", "FitH", "XYZ"})
 		} else {
 			nameErr = !pdf.MemberOf(name.Value(), []string{"Fit", "FitB"})
 		}
 
 	case 3:
-		nameErr = name.Value() != "FitH" && name.Value() != "FitV" && name.Value() != "FitBH"
+		nameErr = name.Value() != "FitH" && name.Value() != "FitV" && name.Value() != "FitBH" && name.Value() != "XYZ"
 
 	case 4:
 		// TODO Cleanup
